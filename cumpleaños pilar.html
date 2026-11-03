@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>¡Feliz Cumpleaños Pilar!</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Great+Vibes&family=Montserrat:wght@400;600;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- GSAP Animation Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Confeti de fondo global */
+        #galaxyCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #000000;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        /* Estructura para ocultar/mostrar pantallas */
+        .hidden-screen {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .screen-container {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .subtitle {
+            font-size: 25px;
+            letter-spacing: 3px;
+            color: #987912;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255,180,50,.6);
+            font-weight: 700;
+            animation: surpriseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes surpriseGlow {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 12px rgba(255, 180, 50, .55), 0 0 22px rgba(255, 80, 150, .35);
+            }
+            50% {
+                transform: scale(1.05);
+                text-shadow: 0 0 20px rgba(255, 215, 0, .95), 0 0 38px rgba(255, 80, 150, .75);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .subtitle {
+                animation: none;
+            }
+        }
+
+        h1.main-h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-family: 'Fredoka', sans-serif;
+            text-align: center;
+            text-shadow: 0 0 25px rgba(255,255,255,.9), 0 0 45px rgba(255,180,50,.6);
+            color: #ffd166;
+            animation: mainBirthdayGlow 2.4s ease-in-out infinite;
+        }
+
+        @keyframes mainBirthdayGlow {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 25px rgba(255,255,255,.9), 0 0 45px rgba(255,180,50,.6);
+            }
+            50% {
+                transform: scale(1.04);
+                text-shadow: 0 0 30px rgba(255,255,255,1), 0 0 58px rgba(255,180,50,.6), 0 0 78px rgba(255,80,150,.65);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            h1.main-h1 {
+                animation: none;
+            }
+        }
+
+        .description {
+            font-size: 14px;
+            color: #856d0f;
+            margin-bottom: 25px;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255,200,50,.4);
+            text-align: center;
+        }
+
+        #countdown-message {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Cuenta regresiva */
+        .countdown-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .box {
+            background: rgba(109, 99, 61, 0.85);
+            border: 1px solid rgba(255, 200, 50, 0.4);
+            padding: 15px 20px;
+            border-radius: 12px;
+            min-width: 65px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 25px rgba(255, 42, 109, 0.3);
+            text-align: center;
+        }
+
+        .box span {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .box label {
+            font-size: 10px;
+            color: #ffccd5;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, rgba(220, 20, 80, 0.8), rgba(200, 140, 20, 0.7));
+            color: #ffffff;
+            border: 1px solid rgba(255, 215, 0, 0.8);
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 0 25px rgba(255, 42, 109, 0.5), 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(255, 42, 109, 1), rgba(255, 180, 0, 0.9));
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(255, 42, 109, 0.8);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        /* Caja de regalo animada */
+        .gift-box-container {
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gift-box-wrapper {
+            position: relative;
+            margin: 15px 0;
+            filter: drop-shadow(0 0 35px rgba(255,200,50,.6));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform .4s ease;
+        }
+
+        .gift-box-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes shakeBox {
+            0% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-6deg) scale(1.05); }
+            40% { transform: rotate(6deg) scale(1.05); }
+            60% { transform: rotate(-4deg) scale(1.03); }
+            80% { transform: rotate(4deg) scale(1.03); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .gift-box-wrapper.shake { animation: shakeBox 0.5s ease-in-out; }
+
+        .gift-lid {
+            width: 156px;
+            height: 26px;
+            background: linear-gradient(145deg, rgba(255,200,50,.7), rgba(220,20,80,.7));
+            border: 2px solid rgba(255,215,0,.9);
+            border-radius: 6px;
+            position: relative;
+            z-index: 2;
+            transform-origin: bottom left;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
+        }
+
+        .gift-lid::after, .gift-body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100%;
+            background: rgba(255,255,255,.8);
+        }
+
+        .gift-bow {
+            position: absolute;
+            top: -24px;
+            width: 44px;
+            height: 22px;
+            z-index: 3;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gift-bow::before, .gift-bow::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 18px;
+            border: 3px solid rgba(255,215,0,.95);
+            border-radius: 50% 50% 0 50%;
+            top: 0;
+        }
+        .gift-bow::before { left: 0; transform: rotate(-30deg); }
+        .gift-bow::after { right: 0; transform: scaleX(-1) rotate(-30deg); }
+
+        .gift-body {
+            width: 140px;
+            height: 110px;
+            background: linear-gradient(145deg, rgba(220,20,80,.6), rgba(50,5,20,.9));
+            border: 2px solid rgba(255,200,50,.8);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+        }
+
+        .gift-box-wrapper.open .gift-lid {
+            transform: rotate(-60deg) translateY(-55px) translateX(-25px);
+            opacity: 0.9;
+            filter: drop-shadow(0 15px 15px rgba(255,215,0,0.5));
+        }
+        .gift-box-wrapper.open .gift-bow {
+            transform: translateY(-55px) rotate(-25deg) scale(1.2);
+            opacity: 0.9;
+        }
+        .gift-box-wrapper.open .gift-body {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px rgba(255,215,0,0.8);
+        }
+
+        /* Modal de Felicitación (Página 3) */
+        #surprise-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.82);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        #surprise-modal.active { display: flex; }
+
+        .modal-content {
+            background: rgba(49, 40, 16, 0.85);
+            border: 1px solid rgba(255, 195, 0, 0.45);
+            border-radius: 26px;
+            padding: 28px 24px 30px;
+            max-width: 460px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(74, 62, 29, 0.95), 0 0 35px rgba(255,190,50,.25);
+            position: relative;
+            z-index: 101;
+        }
+
+        /* Botón estilo píldora con degradado cálido e iluminación dorada (image_acd9fa.png) */
+        .btn-gold-glow {
+            background: linear-gradient(135deg, #c92a52 0%, #b86b14 100%);
+            border: 1px solid rgba(255, 215, 0, 0.85);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 9999px;
+            padding: 14px 38px;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(220, 42, 82, 0.75), 0 0 18px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gold-glow:hover {
+            transform: scale(1.06);
+            background: linear-gradient(135deg, #e03260 0%, #d47e19 100%);
+            box-shadow: 0 0 40px rgba(255, 50, 100, 0.9), 0 0 25px rgba(255, 215, 0, 0.8);
+        }
+
+        .glass-panel {
+            background: rgba(49, 40, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 15px 50px rgba(70, 54, 25, 0.604), 0 0 30px rgba(255, 165, 0, 0.25);
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            cursor: grab;
+        }
+
+
+        #webgl-canvas:active {
+            cursor: grabbing;
+        }
+
+        .birthday-scene-title {
+            position: fixed;
+            top: 42px;
+            left: 50%;
+            z-index: 45;
+            width: min(90vw, 900px);
+            margin: 0;
+            transform: translateX(-50%);
+            opacity: 0;
+            color: #ffe08a;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(22px, 4vw, 46px);
+            line-height: 1.1;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 12px rgba(255, 190, 50, .95), 0 0 28px rgba(255, 90, 130, .75);
+            animation: birthdayTitleEntrance 1.5s cubic-bezier(.16, 1, .3, 1) .15s forwards, birthdayTitleGlow 2.4s ease-in-out 1.65s infinite alternate;
+            pointer-events: none;
+        }
+
+        .birthday-scene-title::before,
+        .birthday-scene-title::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            color: #fff3bd;
+            font-size: .55em;
+            opacity: 0;
+            text-shadow: 0 0 8px #fff, 0 0 20px #ffc247, 0 0 32px #ff7b00;
+            animation: birthdayTitleSparkle 1.8s ease-out .55s both;
+        }
+
+        .birthday-scene-title::before {
+            left: 8%;
+        }
+
+        .birthday-scene-title::after {
+            right: 8%;
+            animation-delay: .85s;
+        }
+
+        @keyframes birthdayTitleEntrance {
+            0% { opacity: 0; transform: translate(-50%, -28px) scale(.72); filter: blur(8px); }
+            65% { opacity: 1; transform: translate(-50%, 4px) scale(1.08); filter: blur(0); }
+            82% { transform: translate(-50%, -2px) scale(.98); }
+            100% { opacity: 1; transform: translate(-50%, 0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes birthdayTitleSparkle {
+            0% { opacity: 0; transform: translateY(-50%) scale(.2) rotate(-35deg); }
+            35% { opacity: 1; transform: translateY(-50%) scale(1.5) rotate(15deg); }
+            100% { opacity: 0; transform: translateY(-50%) scale(.35) rotate(70deg); }
+        }
+
+        @keyframes birthdayTitleGlow {
+            from { opacity: .82; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            .birthday-scene-title {
+                top: 48px;
+                width: calc(100vw - 32px);
+                letter-spacing: 1px;
+            }
+        }
+
+        .photo-viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 3vh 3vw;
+            background: rgba(0,0,0,.96);
+            cursor: zoom-out;
+        }
+        .photo-viewer.active { display: flex; }
+        .photo-viewer img {
+            max-width: 94vw;
+            max-height: 92vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 0 45px rgba(255,190,50,.25);
+            cursor: default;
+        }
+        #photo-viewer-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 2;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: white;
+            font-size: 25px;
+            background: rgba(30, 28, 20, 0.85);
+            border: 1px solid rgba(255,215,0,.55);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Confeti de fondo global para Páginas 1, 2 y 3 -->
+    <canvas id="galaxyCanvas"></canvas>
+
+    <!-- Canvas de Escenario 3D (Página 4) -->
+    <canvas id="webgl-canvas" class="hidden-screen"></canvas>
+    <h1 id="birthday-scene-title" class="birthday-scene-title hidden-screen">¡FELIZ CUMPLEAÑOS PILAR!</h1>
+
+    <div hidden aria-hidden="true">
+        <img id="photo-asset-1" src="IMAGEN/foto1.jpg" alt="">
+        <img id="photo-asset-2" src="IMAGEN/foto2.jpg" alt="">
+        <img id="photo-asset-3" src="IMAGEN/foto3.jpg" alt="">
+        <img id="photo-asset-4" src="IMAGEN/foto4.jpg" alt="">
+        <img id="photo-asset-5" src="IMAGEN/foto5.jpg" alt="">
+        <img id="photo-asset-6" src="IMAGEN/foto6.jpg" alt="">
+    </div>
+
+    <!-- ==========================================
+         PÁGINA 1: CAJA DE REGALO SORPRESA INTERACTIVA
+         ========================================== -->
+    <div id="screen-box" class="screen-container">
+        <p class="subtitle">✦ SORPRESA ESPECIAL ✦</p>
+        <div class="gift-box-container" onclick="openGiftBox()">
+            <div class="gift-box-wrapper" id="giftWrapper">
+                <div class="gift-bow"></div>
+                <div class="gift-lid"></div>
+                <div class="gift-body"></div>
+            </div>
+            <p class="description" style="margin:15px 0 0">✨ Toca la caja para abrir tu regalo ✨</p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PÁGINA 2: PANTALLA DE CUENTA REGRESIVA
+         ========================================== -->
+    <div id="screen-countdown" class="screen-container hidden-screen">
+        <h1 class="main-h1">¡FELIZ CUMPLEAÑOS PILAR!</h1>
+        <p id="countdown-message" class="description">Algo hermoso te está esperando</p>
+        
+        <div class="countdown-container">
+            <div class="box"><span id="days">00</span><label>DÍAS</label></div>
+            <div class="box"><span id="hours">00</span><label>HORAS</label></div>
+            <div class="box"><span id="minutes">00</span><label>MINUTOS</label></div>
+            <div class="box"><span id="seconds">00</span><label>SEGUNDOS</label></div>
+        </div>
+        
+        <button id="btn-birthday-video" class="btn" onclick="mostrarModalFelicitacion()" disabled>VER EL VIDEO EN LENGUA DE SEÑAS. ✨</button>
+    </div>
+
+    <!-- ==========================================
+         PÁGINA 3: MODAL DE FELICITACIÓN ESPECIAL
+         ========================================== -->
+    <div id="surprise-modal">
+        <div class="modal-content">
+            <!-- Botón de cierre superior derecho -->
+            <button onclick="cerrarModalFelicitacion()" class="absolute top-4 right-5 text-gray-400 hover:text-white text-xl transition-colors">✕</button>
+            
+            <!-- Título y Subtítulo del Modal -->
+            <h2 style="font-family:'Montserrat', sans-serif;font-size:24px;color:#ffffff;margin-bottom:4px;font-weight:700" class="tracking-tight">
+                Felicitaciones de Cumpleaños
+            </h2>
+            <p style="font-size:11px;color:#fbcfe8;letter-spacing:2px;margin-bottom:20px" class="uppercase font-semibold">
+              
+            </p>
+        
+
+ <!-- VENTANA MODAL REPRODUCTOR VIDEO VERTICAL -->
+<video id="birthdayVideo" class="w-full h-full object-cover" controls preload="metadata" playsinline>
+    <source src="VIDEO/hola1.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+</video>
+            <button id="btn-go-3d" type="button" onclick="irATorta3D()" style="display:block;margin:18px auto 0;padding:12px 24px;border-radius:999px;background:linear-gradient(90deg,#d97706,#ea580c);color:#fcfbfadb;font-weight:700;letter-spacing:1px;box-shadow:0 8px 24px #f59e0b55;cursor:pointer">
+                CONTINUAR✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Visor de fotos ampliable a pantalla completa -->
+    <div id="photo-viewer" class="photo-viewer" aria-hidden="true">
+        <button id="photo-viewer-close" type="button" aria-label="Cerrar foto">✕</button>
+        <img id="photo-viewer-image" src="" alt="Foto ampliada">
+    </div>
+
+    <!-- UI SUPERIOR PARA PÁGINA 4 (3D) -->
+    <div id="3d-ui-controls" class="fixed top-4 left-0 right-0 z-50 px-4 md:px-8 flex justify-between items-center pointer-events-none hidden-screen">
+        <!-- Pantalla Completa -->
+        <button id="btn-fullscreen" class="pointer-events-auto p-3 rounded-full glass-panel text-amber-300 hover:text-white hover:border-amber-400 transform hover:scale-110 active:scale-90 transition-all duration-300 shadow-lg" title="Pantalla Completa">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 30 30">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+        </button>
+
+        <!-- Controles de Zoom (+ / -) -->
+        <div class="flex gap-2 pointer-events-auto">
+            <button id="btn-zoom-in" class="p-3 rounded-full glass-panel text-amber-300 hover:text-white hover:border-amber-400 transform hover:scale-110 active:scale-90 transition-all duration-300 shadow-lg font-bold text-lg w-12 h-12 flex items-center justify-center" title="Zoom Acercar">
+                +
+            </button>
+            <button id="btn-zoom-out" class="p-3 rounded-full glass-panel text-amber-300 hover:text-white hover:border-amber-400 transform hover:scale-110 active:scale-90 transition-all duration-300 shadow-lg font-bold text-lg w-12 h-12 flex items-center justify-center" title="Zoom Alejar">
+                −
+            </button>
+        </div>
+    </div>
+
+    <!-- Indicaciones de interacción Página 4 -->
+    <div id="3d-bottom-hint" class="fixed bottom-4 left-0 right-0 z-40 pointer-events-none text-center px-4 hidden-screen">
+       
+    </div>
+
+    <!-- Modal de Recuerdo Especial en Página 4 -->
+    <div id="message-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 transform scale-90">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 max-w-sm md:max-w-md w-full text-center relative border border-amber-400/60 shadow-2xl">
+            <div class="w-28 h-28 mx-auto -mt-16 rounded-full border-4 border-amber-300 shadow-xl overflow-hidden bg-amber-950 flex items-center justify-center shadow-amber-500/50">
+                <img id="modal-img" src="" alt="Recuerdo (toca para ampliar)" title="Toca para ampliar a pantalla completa" class="w-full h-full object-cover" style="cursor:zoom-in">
+            </div>
+
+            <h3 id="modal-title" class="mt-4 text-xl md:text-2xl font-bold text-amber-200 font-montserrat uppercase tracking-wider">
+                ¡MOMENTO ESPECIAL!
+            </h3>
+            
+            <p id="modal-text" class="mt-3 text-sm md:text-base text-gray-200 leading-relaxed font-sans">
+                Que tu día esté lleno de momentos mágicos y sonrisas.
+            </p>
+
+            <button id="btn-close-modal" class="mt-6 px-8 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-amber-500/50 transform hover:scale-105 active:scale-95 transition-all duration-200 uppercase tracking-wider">
+                CERRAR ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT GLOBAL Y DE NAVEGACIÓN ENTRE PÁGINAS -->
+    <script>
+        /* ==========================================
+           CONFETI DE FONDO GLOBAL (PÁGINAS 1, 2 Y 3)
+           ========================================== */
+        const gCanvas = document.getElementById('galaxyCanvas');
+        const gctx = gCanvas.getContext('2d');
+        
+        function resizeG() {
+            gCanvas.width = innerWidth;
+            gCanvas.height = innerHeight;
+        }
+        addEventListener('resize', resizeG);
+        resizeG();
+
+        class ConfettiPiece {
+            constructor() { this.reset(true); }
+            reset(init) {
+                this.x = Math.random() * gCanvas.width;
+                this.y = init ? Math.random() * gCanvas.height : -20;
+                this.w = Math.random() * 8 + 4;
+                this.h = Math.random() * 4 + 2;
+                this.sy = Math.random() * 1.8 + 0.6;
+                this.sx = (Math.random() - 0.5) * 1.2;
+                this.rot = Math.random() * 360;
+                this.rs = (Math.random() - 0.5) * 3;
+                this.color = ['#ffd700','#ff2a2a','#2ecc71','#ffffff','#ff9f43','#e74c3c','#1abc9c'][Math.floor(Math.random() * 7)];
+                this.alpha = Math.random() * 0.8 + 0.2;
+            }
+            update() {
+                this.y += this.sy;
+                this.x += this.sx + Math.sin(this.y * 0.03) * 0.5;
+                this.rot += this.rs;
+                if (this.y > gCanvas.height + 20) this.reset();
+            }
+            draw() {
+                gctx.save();
+                gctx.translate(this.x, this.y);
+                gctx.rotate(this.rot * Math.PI / 180);
+                gctx.globalAlpha = this.alpha;
+                gctx.fillStyle = this.color;
+                gctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+                gctx.restore();
+            }
+        }
+
+        const confettiPieces = Array.from({ length: 900 }, () => new ConfettiPiece());
+        let confettiActive = true;
+
+        function loopConfetti() {
+            if (!confettiActive) return;
+            gctx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+            confettiPieces.forEach(c => { c.update(); c.draw(); });
+            requestAnimationFrame(loopConfetti);
+        }
+        loopConfetti();
+
+        /* ==========================================
+           CUENTA REGRESIVA (7 DE NOVIEMBRE DE 2026)
+           ========================================== */
+        const target = new Date(2026, 10, 7, 0, 0, 0);
+        function tick() {
+            const now = new Date();
+            let d = target - now;
+            if (d < 0) { d = 0; }
+            const p = n => String(Math.floor(n)).padStart(2, '0');
+            document.getElementById('days').textContent = p(d / 864e5);
+            document.getElementById('hours').textContent = p(d / 36e5 % 24);
+            document.getElementById('minutes').textContent = p(d / 6e4 % 60);
+            document.getElementById('seconds').textContent = p(d / 1e3 % 60);
+            updateVideoButton(now);
+        }
+
+        /* ==========================================
+           NAVEGACIÓN ENTRE PÁGINAS (P1 -> P2 -> P3 -> P4)
+           ========================================== */
+        const screenBox = document.getElementById('screen-box');
+        const screenCountdown = document.getElementById('screen-countdown');
+        const birthdayVideoButton = document.getElementById('btn-birthday-video');
+        const surpriseModal = document.getElementById('surprise-modal');
+        const giftWrapper = document.getElementById('giftWrapper');
+        const birthdayVideo = document.getElementById('birthdayVideo');
+        const webglCanvas = document.getElementById('webgl-canvas');
+        const uiControls3D = document.getElementById('3d-ui-controls');
+        const bottomHint3D = document.getElementById('3d-bottom-hint');
+
+        function updateVideoButton(now = new Date()) {
+            const isUnlocked = now >= target;
+            birthdayVideoButton.disabled = !isUnlocked;
+            birthdayVideoButton.setAttribute('aria-disabled', String(!isUnlocked));
+            document.getElementById('countdown-message').textContent = 'Algo hermoso te está esperando';
+        }
+
+        tick();
+        setInterval(tick, 1000);
+
+        // PÁGINA 1: Abrir regalo e ir a PÁGINA 2
+        function openGiftBox() {
+            if (giftWrapper.classList.contains('open')) return;
+            giftWrapper.classList.add('shake');
+            setTimeout(() => {
+                giftWrapper.classList.remove('shake');
+                giftWrapper.classList.add('open');
+            }, 400);
+            setTimeout(() => {
+                screenBox.classList.add('hidden-screen');
+                screenCountdown.classList.remove('hidden-screen');
+            }, 1100);
+        }
+
+        // PÁGINA 2 -> PÁGINA 3 (Mostrar Modal)
+        function mostrarModalFelicitacion() {
+            if (new Date() < target) return;
+            surpriseModal.classList.add('active');
+            if (birthdayVideo) birthdayVideo.play().catch(() => {});
+        }
+
+        function cerrarModalFelicitacion() {
+            surpriseModal.classList.remove('active');
+            if (birthdayVideo) birthdayVideo.pause();
+        }
+
+        // PÁGINA 3 -> PÁGINA 4 (Ir a la Torta 3D)
+        function irATorta3D() {
+            cerrarModalFelicitacion();
+            screenCountdown.classList.add('hidden-screen');
+            confettiActive = false;
+            gCanvas.style.opacity = '0';
+            setTimeout(() => { gCanvas.style.display = 'none'; }, 900);
+
+            // Revelar Canvas 3D y controles de Página 4
+            webglCanvas.classList.remove('hidden-screen');
+            document.getElementById('birthday-scene-title').classList.remove('hidden-screen');
+            uiControls3D.classList.remove('hidden-screen');
+            bottomHint3D.classList.remove('hidden-screen');
+
+            // Inicializar o ajustar escena 3D
+            if (!is3DInitialized) {
+                init3D();
+            }
+        }
+    </script>
+
+    <!-- ==========================================
+         LÓGICA THREE.JS PARA ESCENARIO 3D (PÁGINA 4)
+         ========================================== -->
+    <script>
+        // // Datos de tarjetas de recuerdos configurados con las rutas locales de la carpeta IMAGEN/
+        const MEMORIES_DATA = [
+            {
+                img: "IMAGEN/foto1.jpg",
+                title: "¡QUE LA PASES GENIAL!🎉🌟",
+                text: "Deseo que disfrutes cada segundo de tu día rodeada de mucho, risas y sorpresas maravillosas."
+            },
+            {
+                img: "IMAGEN/foto2.jpg",
+                title: "¡AMOR POR LOS ANIMALES🐾!",
+                text: "Sigue iluminando el mundo con tu linda sonrisa, tu energía radiante y tu noble corazón."
+            },
+            {
+                img: "IMAGEN/foto3.jpg",
+                title: "¡MACHU PICCHU🏞️✨!",
+                text: "Me acompaña a conocer y pasear por este hermoso lugar. ¡Qué maravilla! El aire puro, el olor rico de la naturaleza y la belleza de las montañas me hacen sentir muy feliz.✨"
+            },
+            {
+                img: "IMAGEN/foto4.jpg",
+                title: "¡PARTIDO DE FUTBOL⚽!",
+                text: "Juego y converso mientras explico cómo utilizar la cámara Canon para tomar fotografías del fútbol. ⚽📸"
+            },
+            {
+                img: "IMAGEN/foto5.jpg",
+                title: "¡¡¡CERVEZA🍻!!!",
+                text: "Disfrutando del paseo, conversando y haciendo bromas en un lugar tan hermoso como Machu Picchu, compartiendo momentos bonitos y muchas risas."
+            },
+            {
+                img: "IMAGEN/foto6.jpg",
+                title: "¡HITORIA DE AREA 21👽!",
+                text: "Hablas sobre la historia del pasado. Entiendo un poco, pero me sorprende conocer más sobre la historia de Área 21."
+            }
+        ];
+
+        // // Mensajes flotantes en órbita
+        const ORBITING_MESSAGES = [
+            "A CELEBRAR A LO GRANDE ✨",
+            "NUNCA DEJES DE BRILLAR 🌟",
+            "¡MUCHAS FELICIDADES! 🎂",
+            "AMISTAD PARA SIEMPRE ❤️",
+            "QUE LA PASES DE LO MEJOR HOY 🎉",
+            "LOGRA CADA SUEÑO 💫",
+            "MUCHAS FELICIDADES EN TU DÍA 🎈",
+            "DISFRUTA TU DÍA 🥳",
+            "QUE TODOS TUS DESEOS SE HAGAN REALIDAD 🌠 ",
+            "HOY ES TU DÍA, ¡DISFRÚTALO! 🎊 ",
+            "SONRÍE, LA VIDA ES MARAVILLOSA 😊 ",
+            "QUE NUNCA TE FALTEN MOTIVOS PARA SONREÍR 💖 ",
+            "BRILLA CON TU PROPIA LUZ 🌟 ",
+            "MUCHOS ÉXITOS Y BENDICIONES 🙏 ",
+            "QUE LA FELICIDAD TE ACOMPAÑE SIEMPRE 💕 ",
+            "SIGUE SOÑANDO Y ALCANZANDO TUS METAS 🏆 ",
+            "MOMENTOS BONITOS, RECUERDOS INOLVIDABLES 📸 ",
+            "QUE HOY SEA UN DÍA LLENO DE ALEGRÍA 🎂",
+            "CELEBRA LA VIDA Y CADA NUEVO MOMENTO 🥂",
+            "¡QUE VENGAN MUCHOS AÑOS DE ALEGRÍA! 🎉"
+
+        ];
+
+        // // Variables de Three.js
+        let scene, camera, renderer;
+        let cakeGroup, catGroup, headGroup, tailMesh;
+        let sparklesGroup, galaxyGroup;
+        let memoryBadges = [];
+        let textSprites = [];
+        let sparklerParticles = [];
+        let fireworksList = [];
+        let candleFlames = [];
+        let isBouncing = false;
+        let lastFireworkTime = 0;
+        let glowSparkTexture = null;
+        let is3DInitialized = false;
+
+        // // Estado de cámara esférica (Control 360°)
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let cameraSpherical = { radius: 19.5, theta: 0, phi: Math.PI / 3.2 };
+        let targetSpherical = { ...cameraSpherical };
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // // Textura de destello
+        function createGlowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.25, 'rgba(255, 220, 120, 0.95)');
+            gradient.addColorStop(0.6, 'rgba(255, 160, 30, 0.4)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // // Fuegos artificiales
+        class Firework {
+            constructor(scene, customX = null, customZ = null) {
+                this.scene = scene;
+                this.isDead = false;
+                this.state = 'rocket';
+
+                const startX = customX !== null ? customX : (Math.random() - 0.5) * 20;
+                const startZ = customZ !== null ? customZ : (Math.random() - 0.5) * 12 - 3;
+                this.targetY = 5.8 + Math.random() * 4.2;
+
+                const colorPalette = [0xffd700, 0xff007f, 0x00f0ff, 0xaa00ff, 0xffea00, 0xff3399, 0xffffff];
+                this.color = new THREE.Color(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+
+                this.currX = startX;
+                this.currY = -2.5;
+                this.currZ = startZ;
+
+                this.trailParticleCount = 28;
+                this.trailPositions = new Float32Array(this.trailParticleCount * 3);
+                for (let i = 0; i < this.trailParticleCount; i++) {
+                    this.trailPositions[i * 3] = startX;
+                    this.trailPositions[i * 3 + 1] = -2.5;
+                    this.trailPositions[i * 3 + 2] = startZ;
+                }
+
+                const trailGeo = new THREE.BufferGeometry();
+                trailGeo.setAttribute('position', new THREE.BufferAttribute(this.trailPositions, 3));
+
+                const trailMat = new THREE.PointsMaterial({
+                    size: 0.45,
+                    map: glowSparkTexture,
+                    color: new THREE.Color(0xffea75),
+                    transparent: true,
+                    opacity: 0.95,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+
+                this.rocket = new THREE.Points(trailGeo, trailMat);
+                this.velY = 0.29 + Math.random() * 0.08;
+                this.scene.add(this.rocket);
+                this.particles = null;
+                this.dustParticles = null;
+            }
+
+            update() {
+                if (this.state === 'rocket') {
+                    this.currY += this.velY;
+                    const pos = this.rocket.geometry.attributes.position.array;
+                    for (let i = this.trailParticleCount - 1; i > 0; i--) {
+                        pos[i * 3] = pos[(i - 1) * 3] + (Math.random() - 0.5) * 0.03;
+                        pos[i * 3 + 1] = pos[(i - 1) * 3 + 1] - 0.04;
+                        pos[i * 3 + 2] = pos[(i - 1) * 3 + 2] + (Math.random() - 0.5) * 0.03;
+                    }
+                    pos[0] = this.currX + (Math.random() - 0.5) * 0.05;
+                    pos[1] = this.currY;
+                    pos[2] = this.currZ + (Math.random() - 0.5) * 0.05;
+                    this.rocket.geometry.attributes.position.needsUpdate = true;
+
+                    if (this.currY >= this.targetY) {
+                        this.explode(this.currX, this.currY, this.currZ);
+                    }
+                } else if (this.state === 'explode') {
+                    this.life -= 0.014;
+                    const opacity = Math.max(0, this.life);
+
+                    if (this.particles) {
+                        const pos = this.particles.geometry.attributes.position.array;
+                        this.particles.material.opacity = opacity;
+                        for (let i = 0; i < this.particleCount; i++) {
+                            pos[i * 3] += this.velocities[i].x;
+                            pos[i * 3 + 1] += this.velocities[i].y;
+                            pos[i * 3 + 2] += this.velocities[i].z;
+                            this.velocities[i].y -= 0.0028;
+                            this.velocities[i].x *= 0.984;
+                            this.velocities[i].z *= 0.984;
+                        }
+                        this.particles.geometry.attributes.position.needsUpdate = true;
+                    }
+
+                    if (this.dustParticles) {
+                        const dustPos = this.dustParticles.geometry.attributes.position.array;
+                        this.dustParticles.material.opacity = opacity * 0.8;
+                        for (let i = 0; i < this.dustCount; i++) {
+                            dustPos[i * 3] += this.dustVelocities[i].x;
+                            dustPos[i * 3 + 1] += this.dustVelocities[i].y;
+                            dustPos[i * 3 + 2] += this.dustVelocities[i].z;
+                            this.dustVelocities[i].y -= 0.0035;
+                            this.dustVelocities[i].x *= 0.975;
+                            this.dustVelocities[i].z *= 0.975;
+                        }
+                        this.dustParticles.geometry.attributes.position.needsUpdate = true;
+                    }
+
+                    if (this.life <= 0) {
+                        this.cleanup();
+                    }
+                }
+            }
+
+            explode(x, y, z) {
+                this.scene.remove(this.rocket);
+                this.rocket.geometry.dispose();
+                this.rocket.material.dispose();
+
+                this.state = 'explode';
+                this.life = 1.0;
+                this.particleCount = 260;
+                this.dustCount = 180;
+
+                const geo = new THREE.BufferGeometry();
+                const positions = new Float32Array(this.particleCount * 3);
+                this.velocities = [];
+
+                for (let i = 0; i < this.particleCount; i++) {
+                    positions[i * 3] = x;
+                    positions[i * 3 + 1] = y;
+                    positions[i * 3 + 2] = z;
+
+                    const u = Math.random();
+                    const v = Math.random();
+                    const theta = u * 2.0 * Math.PI;
+                    const phi = Math.acos(2.0 * v - 1.0);
+                    const speed = 0.12 + Math.random() * 0.28;
+
+                    this.velocities.push(new THREE.Vector3(
+                        speed * Math.sin(phi) * Math.cos(theta),
+                        speed * Math.sin(phi) * Math.sin(theta),
+                        speed * Math.cos(phi)
+                    ));
+                }
+
+                geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                const mat = new THREE.PointsMaterial({
+                    size: 0.48,
+                    map: glowSparkTexture,
+                    color: this.color,
+                    transparent: true,
+                    opacity: 1.0,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+
+                this.particles = new THREE.Points(geo, mat);
+                this.scene.add(this.particles);
+
+                const dustGeo = new THREE.BufferGeometry();
+                const dustPos = new Float32Array(this.dustCount * 3);
+                this.dustVelocities = [];
+
+                for (let i = 0; i < this.dustCount; i++) {
+                    dustPos[i * 3] = x;
+                    dustPos[i * 3 + 1] = y;
+                    dustPos[i * 3 + 2] = z;
+
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.random() * Math.PI;
+                    const speed = 0.04 + Math.random() * 0.12;
+
+                    this.dustVelocities.push(new THREE.Vector3(
+                        speed * Math.sin(phi) * Math.cos(theta),
+                        speed * Math.sin(phi) * Math.sin(theta),
+                        speed * Math.cos(phi)
+                    ));
+                }
+
+                dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+
+                const dustMat = new THREE.PointsMaterial({
+                    size: 0.26,
+                    map: glowSparkTexture,
+                    color: new THREE.Color(0xfff3b0),
+                    transparent: true,
+                    opacity: 0.9,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+
+                this.dustParticles = new THREE.Points(dustGeo, dustMat);
+                this.scene.add(this.dustParticles);
+            }
+
+            cleanup() {
+                this.isDead = true;
+                if (this.particles) {
+                    this.scene.remove(this.particles);
+                    this.particles.geometry.dispose();
+                    this.particles.material.dispose();
+                }
+                if (this.dustParticles) {
+                    this.scene.remove(this.dustParticles);
+                    this.dustParticles.geometry.dispose();
+                    this.dustParticles.material.dispose();
+                }
+            }
+        }
+
+        function launchGoldenCluster(centerX = 0, centerZ = -2) {
+            const offsets = [
+                { x: 0, z: 0 }, { x: -4.5, z: -1.5 }, { x: 4.5, z: -1.0 },
+                { x: -2.2, z: 1.2 }, { x: 2.5, z: -2.2 }, { x: -1.0, z: -3.5 }, { x: 1.2, z: -3.5 }
+            ];
+            offsets.forEach((off, idx) => {
+                setTimeout(() => {
+                    fireworksList.push(new Firework(scene, centerX + off.x, centerZ + off.z));
+                }, idx * 160);
+            });
+        }
+
+        function triggerBounceAction() {
+            if (isBouncing || !cakeGroup) return;
+            isBouncing = true;
+            launchGoldenCluster(0, -2);
+
+            if (typeof gsap !== 'undefined') {
+                gsap.timeline({ onComplete: () => { isBouncing = false; } })
+                .to(cakeGroup.position, { y: -0.1, duration: 0.14, ease: "power1.in" })
+                .to(cakeGroup.scale, { x: 1.04, y: 0.96, z: 1.04, duration: 0.14, ease: "power1.in" }, 0)
+                .to(cakeGroup.position, { y: 0.2, duration: 0.28, ease: "power1.out" })
+                .to(cakeGroup.scale, { x: 0.98, y: 1.02, z: 0.98, duration: 0.28, ease: "power1.out" }, "<")
+                .to(cakeGroup.position, { y: 0, duration: 0.25, ease: "bounce.out" })
+                .to(cakeGroup.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 0.25, ease: "bounce.out" }, "<");
+            } else {
+                isBouncing = false;
+            }
+        }
+
+        // // Inicialización de la escena Three.js
+        function init3D() {
+            if (is3DInitialized) return;
+            is3DInitialized = true;
+
+            const canvas = document.getElementById('webgl-canvas');
+            renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 0.9;
+
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.008);
+
+            glowSparkTexture = createGlowTexture();
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            updateResponsiveCamera();
+
+            // // Luces
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+            dirLight.position.set(6, 10, 6);
+            scene.add(dirLight);
+
+            const goldLight = new THREE.PointLight(0xffb700, 0.6, 25);
+            goldLight.position.set(0, 8, 0);
+            scene.add(goldLight);
+
+            // // Construcción del Universo 3D
+            createStarryBackground();
+            createChocolateGalaxy();
+            cakeGroup = buildChocolateCatCake();
+            scene.add(cakeGroup);
+
+            createOrbitingTextRings();
+            createMemoryBadges();
+
+            sparklesGroup = new THREE.Group();
+            scene.add(sparklesGroup);
+
+            setupControls();
+            window.addEventListener('resize', onWindowResize);
+
+            animate();
+        }
+
+        function updateResponsiveCamera() {
+            const aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = aspect;
+            camera.updateProjectionMatrix();
+
+            if (aspect < 1.0) {
+                targetSpherical.radius = 23.5;
+            } else if (aspect < 1.3) {
+                targetSpherical.radius = 20.5;
+            } else {
+                targetSpherical.radius = 18.0;
+            }
+        }
+
+        function updateCameraPosition() {
+            camera.position.x = cameraSpherical.radius * Math.sin(cameraSpherical.phi) * Math.sin(cameraSpherical.theta);
+            camera.position.y = cameraSpherical.radius * Math.cos(cameraSpherical.phi);
+            camera.position.z = cameraSpherical.radius * Math.sin(cameraSpherical.phi) * Math.cos(cameraSpherical.theta);
+            camera.lookAt(0, 0.5, 0);
+        }
+
+        // // Fondo estrellado
+        function createStarryBackground() {
+            const starCount = 1800;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+
+            for (let i = 0; i < starCount; i++) {
+                const r = 25 + Math.random() * 45;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.cos(phi);
+                positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+                const color = new THREE.Color(Math.random() < 0.75 ? 0xffd700 : 0xffffff);
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.24,
+                map: glowSparkTexture,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending
+            });
+
+            const stars = new THREE.Points(geometry, material);
+            scene.add(stars);
+        }
+
+        // // Velas en espiral
+        function createSpiralCandleTexture(baseColor = '#d90429', stripeColor = '#ffffff') {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = stripeColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = baseColor;
+            const stripeW = 32;
+            for (let y = -256; y < 512; y += stripeW * 2) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(128, y + 128);
+                ctx.lineTo(128, y + 128 + stripeW);
+                ctx.lineTo(0, y + stripeW);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 2);
+            return texture;
+        }
+
+        let candleTextures = null;
+
+        function getCandleTextures() {
+            if (!candleTextures) {
+                candleTextures = [
+                    createSpiralCandleTexture('#0077b6', '#ffffff'),
+                    createSpiralCandleTexture('#d90429', '#ffffff'),
+                    createSpiralCandleTexture('#ffbe0b', '#ffffff')
+                ];
+            }
+            return candleTextures;
+        }
+
+        function createCandle(x, y, z, textureIndex = 0) {
+            const candleGroup = new THREE.Group();
+            candleGroup.position.set(x, y, z);
+
+            const textures = getCandleTextures();
+            const texture = textures[textureIndex % textures.length];
+
+            const waxGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.5, 32);
+            const waxMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.35, metalness: 0.05 });
+            const wax = new THREE.Mesh(waxGeo, waxMat);
+            wax.position.y = 0.25;
+            candleGroup.add(wax);
+
+            const wickGeo = new THREE.CylinderGeometry(0.007, 0.007, 0.08, 8);
+            const wickMat = new THREE.MeshBasicMaterial({ color: 0x1a1a1a });
+            const wick = new THREE.Mesh(wickGeo, wickMat);
+            wick.position.y = 0.5 + 0.04;
+            candleGroup.add(wick);
+
+            const flameGroup = new THREE.Group();
+            flameGroup.position.y = 0.58;
+
+            const innerFlameGeo = new THREE.ConeGeometry(0.045, 0.16, 16);
+            innerFlameGeo.translate(0, 0.08, 0);
+            const innerFlameMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const innerFlame = new THREE.Mesh(innerFlameGeo, innerFlameMat);
+            flameGroup.add(innerFlame);
+
+            const outerFlameGeo = new THREE.ConeGeometry(0.075, 0.22, 16);
+            outerFlameGeo.translate(0, 0.11, 0);
+            const outerFlameMat = new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+            const outerFlame = new THREE.Mesh(outerFlameGeo, outerFlameMat);
+            flameGroup.add(outerFlame);
+
+            const glowSpriteMat = new THREE.SpriteMaterial({
+                map: glowSparkTexture,
+                color: 0xffa500,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending
+            });
+            const glowSprite = new THREE.Sprite(glowSpriteMat);
+            glowSprite.position.y = 0.11;
+            glowSprite.scale.set(0.35, 0.35, 1);
+            flameGroup.add(glowSprite);
+
+            candleGroup.add(flameGroup);
+
+            const flameLight = new THREE.PointLight(0xffaa33, 0.2, 2.0);
+            flameLight.position.y = 0.60;
+            candleGroup.add(flameLight);
+
+            candleFlames.push({ group: flameGroup, light: flameLight, offset: Math.random() * 100 });
+            return candleGroup;
+        }
+
+        // // Glaseado Derretido de Chocolate (Drip Collar)
+        function createDripCollarMesh(radius, topY, glazeMat) {
+            const perimeter = Math.PI * 2 * radius;
+            const dripCount = Math.round(radius * 4.5);
+            const segmentWidth = perimeter / dripCount;
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+
+            for (let i = 0; i < dripCount; i++) {
+                const x0 = i * segmentWidth;
+                const x1 = x0 + segmentWidth * 0.35;
+                const x2 = x0 + segmentWidth * 0.5;
+                const x3 = x0 + segmentWidth * 0.65;
+                const x4 = (i + 1) * segmentWidth;
+
+                const dripDepth = 0.22 + ((Math.sin(i * 2.7 + radius * 3) + 1) / 2) * 0.32;
+                const bridgeDepth = 0.06 + ((Math.cos(i * 1.8) + 1) / 2) * 0.05;
+
+                shape.bezierCurveTo(x0 + segmentWidth * 0.1, -bridgeDepth, x1, -dripDepth, x2, -dripDepth);
+                shape.bezierCurveTo(x3, -dripDepth, x4 - segmentWidth * 0.1, -bridgeDepth, x4, -bridgeDepth);
+            }
+
+            shape.lineTo(perimeter, 0);
+            shape.lineTo(perimeter, 0.05);
+            shape.lineTo(0, 0.05);
+            shape.closePath();
+
+            const extrudeSettings = {
+                depth: 0.03,
+                bevelEnabled: true,
+                bevelThickness: 0.025,
+                bevelSize: 0.02,
+                bevelSegments: 5,
+                curveSegments: 16
+            };
+
+            const extrudeGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            const posAttr = extrudeGeom.attributes.position;
+            for (let i = 0; i < posAttr.count; i++) {
+                const x = posAttr.getX(i);
+                const y = posAttr.getY(i);
+                const z = posAttr.getZ(i);
+
+                const theta = x / radius;
+                const r = radius + 0.01 + z;
+
+                posAttr.setX(i, r * Math.sin(theta));
+                posAttr.setY(i, topY + y);
+                posAttr.setZ(i, r * Math.cos(theta));
+            }
+
+            extrudeGeom.computeVertexNormals();
+            return new THREE.Mesh(extrudeGeom, glazeMat);
+        }
+
+        // // Torta de Chocolate y Gatito Tuxedo 3D
+        function buildChocolateCatCake() {
+            const group = new THREE.Group();
+
+            const chocMat = new THREE.MeshStandardMaterial({ color: 0x3D1C06, roughness: 0.35, metalness: 0.15 }); // // Chocolate suave 3D
+            const glazeMat = new THREE.MeshStandardMaterial({ color: 0x220A02, roughness: 0.12, metalness: 0.15, clearcoat: 0.6, clearcoatRoughness: 0.08 }); // // Glaseado derretido brillante
+            const goldMat = new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.9, roughness: 0.15 }); // // Anillo de oro
+
+            const tiers = [
+                { radius: 3.4, height: 1.4, y: -0.7 },
+                { radius: 2.3, height: 1.2, y: 0.6 },
+                { radius: 1.4, height: 1.0, y: 1.7 }
+            ];
+
+            tiers.forEach((tier) => {
+                const geom = new THREE.CylinderGeometry(tier.radius, tier.radius, tier.height, 64);
+                const mesh = new THREE.Mesh(geom, chocMat);
+                mesh.position.y = tier.y;
+                group.add(mesh); // // Nivel de la torta
+
+                const topY = tier.y + tier.height / 2;
+
+                const capGeo = new THREE.CylinderGeometry(tier.radius + 0.025, tier.radius + 0.025, 0.04, 64);
+                const capMesh = new THREE.Mesh(capGeo, glazeMat);
+                capMesh.position.y = topY + 0.01;
+                group.add(capMesh); // // Cobertura de glaseado
+
+                const ringGeom = new THREE.TorusGeometry(tier.radius + 0.03, 0.035, 16, 64);
+                const topRing = new THREE.Mesh(ringGeom, goldMat);
+                topRing.rotation.x = Math.PI / 2;
+                topRing.position.y = topY;
+                group.add(topRing); // // Anillo metálico de oro
+
+                const dripCollar = createDripCollarMesh(tier.radius, topY, glazeMat);
+                group.add(dripCollar); // // Gotas de chocolate (Drips)
+            });
+
+            // // Rosetas de chocolate base
+            const shellCount = 42;
+            const shellRadius = 3.52;
+            for (let i = 0; i < shellCount; i++) {
+                const angle = (i / shellCount) * Math.PI * 2;
+                const shellGeo = new THREE.SphereGeometry(0.14, 16, 16);
+                shellGeo.scale(1.2, 0.75, 1.0);
+                const shellMat = new THREE.MeshStandardMaterial({ color: 0x271103, roughness: 0.35, metalness: 0.1 });
+                const shell = new THREE.Mesh(shellGeo, shellMat);
+                shell.position.set(Math.cos(angle) * shellRadius, -1.38, Math.sin(angle) * shellRadius);
+                group.add(shell);
+            }
+
+            // // Velas en piso 2 y 3
+            for (let c = 0; c < 6; c++) {
+                const angle = (c / 6) * Math.PI * 2 + 0.4;
+                group.add(createCandle(Math.cos(angle) * 1.15, 2.2, Math.sin(angle) * 1.15, c % 2));
+            }
+            for (let c = 0; c < 8; c++) {
+                const angle = (c / 8) * Math.PI * 2 + 0.3;
+                group.add(createCandle(Math.cos(angle) * 1.95, 1.2, Math.sin(angle) * 1.95, c % 3));
+            }
+
+            // // Base de oro
+            const baseDiskGeom = new THREE.CylinderGeometry(4.4, 4.7, 0.25, 64);
+            const baseDisk = new THREE.Mesh(baseDiskGeom, goldMat);
+            baseDisk.position.y = -1.58;
+            group.add(baseDisk);
+
+            // ==========================================
+            // GATO TUXEDO BLANCO Y NEGRO 3D (image_adc21d.jpg)
+            // ==========================================
+            catGroup = new THREE.Group();
+            catGroup.position.set(0, 2.2, 0);
+
+            const furMat = new THREE.MeshStandardMaterial({ color: 0x111113, roughness: 0.7, metalness: 0.05 }); // // Pelaje negro azabache (#111113)
+            const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }); // // Pelaje blanco puro (#FFFFFF)
+            const pinkMat = new THREE.MeshStandardMaterial({ color: 0xffb6c1, roughness: 0.4 }); // // Nariz rosa bebé (#FFB6C1)
+            const eyeMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.05, metalness: 0.1 }); // // Ojos verde esmeralda (#16A34A)
+            const pupilMat = new THREE.MeshBasicMaterial({ color: 0x020202 }); // // Pupila negra
+
+            // // Torso negro
+            const torsoGeo = new THREE.CylinderGeometry(0.18, 0.26, 0.52, 32);
+            const torso = new THREE.Mesh(torsoGeo, furMat);
+            torso.position.set(0, 0.32, 0);
+            catGroup.add(torso);
+
+            // // Babero y pecho blanco
+            const chestGeo = new THREE.SphereGeometry(0.17, 24, 24);
+            chestGeo.scale(0.95, 1.35, 0.6);
+            const chestMesh = new THREE.Mesh(chestGeo, whiteMat);
+            chestMesh.position.set(0, 0.34, 0.13);
+            catGroup.add(chestMesh);
+
+            // // Muslos y calcetines traseros
+            for (let side = -1; side <= 1; side += 2) {
+                const thighGeo = new THREE.SphereGeometry(0.16, 24, 24);
+                thighGeo.scale(0.7, 1.0, 1.1);
+                const thigh = new THREE.Mesh(thighGeo, furMat);
+                thigh.position.set(side * 0.20, 0.20, -0.04);
+                catGroup.add(thigh);
+
+                const hindPawGeo = new THREE.SphereGeometry(0.08, 16, 16);
+                hindPawGeo.scale(1, 0.6, 1.3);
+                const hindPaw = new THREE.Mesh(hindPawGeo, whiteMat);
+                hindPaw.position.set(side * 0.22, 0.05, 0.12);
+                catGroup.add(hindPaw);
+            }
+
+            // // Patas delanteras con guantes blancos
+            for (let side = -1; side <= 1; side += 2) {
+                const legGeo = new THREE.CylinderGeometry(0.05, 0.06, 0.36, 16);
+                const leg = new THREE.Mesh(legGeo, furMat);
+                leg.position.set(side * 0.10, 0.18, 0.16);
+                catGroup.add(leg);
+
+                const pawGeo = new THREE.SphereGeometry(0.078, 16, 16);
+                pawGeo.scale(1, 0.65, 1.3);
+                const paw = new THREE.Mesh(pawGeo, whiteMat);
+                paw.position.set(side * 0.10, 0.05, 0.22);
+                catGroup.add(paw);
+            }
+
+            // // Cola curvada negra
+            const tailCurve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(0, 0.15, -0.16),
+                new THREE.Vector3(0.12, 0.20, -0.26),
+                new THREE.Vector3(0.24, 0.42, -0.20),
+                new THREE.Vector3(0.20, 0.62, -0.10)
+            ]);
+            tailMesh = new THREE.Mesh(new THREE.TubeGeometry(tailCurve, 20, 0.04, 12, false), furMat);
+            catGroup.add(tailMesh);
+
+            // // Cabeza del gatito Tuxedo
+            headGroup = new THREE.Group();
+            headGroup.position.set(0, 0.68, 0);
+
+            const headGeo = new THREE.SphereGeometry(0.32, 32, 32);
+            headGeo.scale(1.15, 0.96, 1.0);
+            headGroup.add(new THREE.Mesh(headGeo, furMat)); // // Malla cabeza negra
+
+            // // Mancha blanca frontal (Blaze)
+            const blazeGeo = new THREE.SphereGeometry(0.14, 24, 24);
+            blazeGeo.scale(0.5, 1.5, 0.7);
+            const blazeMesh = new THREE.Mesh(blazeGeo, whiteMat);
+            blazeMesh.position.set(0, 0.06, 0.26);
+            headGroup.add(blazeMesh);
+
+            // // Mejillas blancas
+            for (let side = -1; side <= 1; side += 2) {
+                const cheekGeo = new THREE.SphereGeometry(0.15, 24, 24);
+                cheekGeo.scale(1.1, 0.85, 0.9);
+                const cheekFluff = new THREE.Mesh(cheekGeo, whiteMat);
+                cheekFluff.position.set(side * 0.22, -0.08, 0.10);
+                headGroup.add(cheekFluff);
+            }
+
+            // // Hocico blanco y nariz rosa
+            const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 24), whiteMat);
+            muzzle.scale.set(1.3, 0.7, 0.7);
+            muzzle.position.set(0, -0.08, 0.25);
+            headGroup.add(muzzle);
+
+            const nose = new THREE.Mesh(new THREE.SphereGeometry(0.032, 16, 16), pinkMat);
+            nose.scale.set(1.2, 0.8, 0.9);
+            nose.position.set(0, -0.03, 0.33);
+            headGroup.add(nose);
+
+            // // Ojos verdes esmeralda kawaii
+            const eyeGeo = new THREE.SphereGeometry(0.11, 32, 32);
+            eyeGeo.scale(0.88, 1.18, 0.4);
+
+            for (let side = -1; side <= 1; side += 2) {
+                const eye = new THREE.Mesh(eyeGeo, eyeMat);
+                eye.position.set(side * 0.13, 0.08, 0.26);
+                headGroup.add(eye);
+
+                const pupilGeo = new THREE.SphereGeometry(0.062, 16, 16);
+                pupilGeo.scale(0.8, 1.15, 0.4);
+                const pupil = new THREE.Mesh(pupilGeo, pupilMat);
+                pupil.position.set(side * 0.13, 0.08, 0.29);
+                headGroup.add(pupil);
+
+                const shine1 = new THREE.Mesh(new THREE.SphereGeometry(0.024, 8, 8), whiteMat);
+                shine1.position.set(side * 0.11, 0.12, 0.31);
+                headGroup.add(shine1);
+            }
+
+            // // Bigotes blancos
+            for (let side = -1; side <= 1; side += 2) {
+                for (let w = -1; w <= 1; w++) {
+                    const whisker = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.002, 0.32, 8), whiteMat);
+                    whisker.rotation.z = Math.PI / 2 + (w * 0.12);
+                    whisker.rotation.y = side * 0.25;
+                    whisker.position.set(side * 0.23, -0.06 + (w * 0.03), 0.22);
+                    headGroup.add(whisker);
+                }
+            }
+
+            // // Orejas negras con interior rosa
+            for (let side = -1; side <= 1; side += 2) {
+                const ear = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.28, 16), furMat);
+                ear.position.set(side * 0.20, 0.32, 0.02);
+                ear.rotation.z = side * -0.22;
+                headGroup.add(ear);
+
+                const innerEar = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.20, 16), pinkMat);
+                innerEar.position.set(side * 0.20, 0.31, 0.04);
+                innerEar.rotation.z = side * -0.22;
+                headGroup.add(innerEar);
+            }
+
+            // // Gorrito de fiesta cónico (Turquesa/amarillo + pompón rojo)
+            const partyHatGroup = new THREE.Group();
+            partyHatGroup.position.set(0.08, 0.34, 0.02);
+            partyHatGroup.rotation.z = -0.18;
+
+            const partyHat = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.34, 24), new THREE.MeshStandardMaterial({ color: 0x00b4d8, roughness: 0.4 }));
+            partyHatGroup.add(partyHat);
+
+            for (let stripe = 0; stripe < 2; stripe++) {
+                const hatStripe = new THREE.Mesh(new THREE.TorusGeometry(0.09 - stripe * 0.03, 0.012, 8, 24), new THREE.MeshBasicMaterial({ color: 0xffd166 }));
+                hatStripe.rotation.x = Math.PI / 2;
+                hatStripe.position.y = -0.06 + stripe * 0.10;
+                partyHatGroup.add(hatStripe);
+            }
+
+            const pomPom = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 16), new THREE.MeshStandardMaterial({ color: 0xef476f, roughness: 0.9 }));
+            pomPom.position.y = 0.18;
+            partyHatGroup.add(pomPom);
+
+            headGroup.add(partyHatGroup);
+            catGroup.add(headGroup);
+            group.add(catGroup);
+
+            return group;
+        }
+
+        // // Galaxia 3D
+        function createChocolateGalaxy() {
+            galaxyGroup = new THREE.Group();
+            const particleCount = 35000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const colorInside = new THREE.Color(0xffd700);
+            const colorOutside = new THREE.Color(0xff4500);
+
+            for (let i = 0; i < particleCount; i++) {
+                const r = Math.pow(Math.random(), 1.5) * 16;
+                const spinAngle = r * 0.7;
+                const branchAngle = ((i % 4) * Math.PI * 2) / 4;
+
+                positions[i * 3] = Math.cos(branchAngle + spinAngle) * r + (Math.random() - 0.5) * 0.6 * r;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 0.5 - 1.6;
+                positions[i * 3 + 2] = Math.sin(branchAngle + spinAngle) * r + (Math.random() - 0.5) * 0.6 * r;
+
+                const mixedColor = colorInside.clone().lerp(colorOutside, r / 16);
+                colors[i * 3] = mixedColor.r;
+                colors[i * 3 + 1] = mixedColor.g;
+                colors[i * 3 + 2] = mixedColor.b;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.13,
+                sizeAttenuation: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95
+            });
+
+            galaxyGroup.add(new THREE.Points(geometry, material));
+            scene.add(galaxyGroup);
+        }
+
+        // // Anillos de Texto Flotantes
+        function createOrbitingTextRings() {
+            ORBITING_MESSAGES.forEach((msg, idx) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 512;
+                canvas.height = 64;
+
+                ctx.font = 'bold 22px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 12;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(msg, canvas.width / 2, canvas.height / 2);
+
+                const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                    map: new THREE.CanvasTexture(canvas),
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                }));
+                sprite.scale.set(4.2, 0.55, 1);
+
+                const radius = 7.8 + (idx % 3) * 1.8;
+                const angle = (idx / ORBITING_MESSAGES.length) * Math.PI * 2;
+
+                sprite.position.set(Math.cos(angle) * radius, 0.6 + (idx % 3) * 1.0, Math.sin(angle) * radius);
+                sprite.userData = { radius, angle, speed: 0.0025 + (idx % 2) * 0.0015 };
+
+                textSprites.push(sprite);
+                scene.add(sprite);
+            });
+        }
+
+        // // Medallas de Recuerdos
+        let memoryBadgesCreated = false;
+
+        function createMemoryBadges() {
+            if (memoryBadgesCreated) return;
+            memoryBadgesCreated = true;
+
+            const photoRadii = [0.9, 0.78, 0.78, 0.78, 0.78, 0.9];
+
+            const createFallbackTexture = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 256; canvas.height = 256;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#2d1500'; ctx.fillRect(0, 0, 256, 256);
+                ctx.font = 'bold 22px Montserrat, sans-serif';
+                ctx.fillStyle = '#ffd700'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText('✨ RECUERDOS ✨', 128, 128);
+                return new THREE.CanvasTexture(canvas);
+            };
+
+            MEMORIES_DATA.forEach((data, i) => {
+                const createBadgeMesh = (texture) => {
+                    texture.generateMipmaps = true;
+                    texture.minFilter = THREE.LinearMipmapLinearFilter;
+
+                    const radius = photoRadii[i];
+                    const badgeMesh = new THREE.Mesh(
+                        new THREE.CircleGeometry(radius, 32),
+                        new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide })
+                    );
+
+                    const ring = new THREE.Mesh(
+                        new THREE.RingGeometry(radius, radius + 0.08, 32),
+                        new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? 0xffd700 : 0xff4500, metalness: 0.8, roughness: 0.2, side: THREE.DoubleSide })
+                    );
+                    badgeMesh.add(ring);
+
+                    badgeMesh.userData = {
+                        id: i,
+                        data,
+                        orbitAngle: (i / MEMORIES_DATA.length) * Math.PI * 2,
+                        orbitSpeed: 0.0025,
+                        phase: i * 1.1,
+                        geometryRadius: radius
+                    };
+
+                    memoryBadges.push(badgeMesh);
+                    scene.add(badgeMesh);
+                    updateMemoryBadgeLayout();
+                };
+
+                const image = document.getElementById(`photo-asset-${i + 1}`);
+                const addPhotoTexture = () => {
+                    if (!image.naturalWidth || !image.naturalHeight) {
+                        createBadgeMesh(createFallbackTexture());
+                        return;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512;
+                    canvas.height = 512;
+                    const context = canvas.getContext('2d');
+                    const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
+                    const cropX = (image.naturalWidth - cropSize) / 2;
+                    const cropY = (image.naturalHeight - cropSize) / 2;
+                    context.drawImage(image, cropX, cropY, cropSize, cropSize, 0, 0, canvas.width, canvas.height);
+
+                    const texture = new THREE.CanvasTexture(canvas);
+                    texture.encoding = THREE.sRGBEncoding;
+                    createBadgeMesh(texture);
+                };
+
+                if (image.complete) {
+                    if (image.naturalWidth > 0) addPhotoTexture();
+                    else createBadgeMesh(createFallbackTexture());
+                } else {
+                    image.addEventListener('load', addPhotoTexture, { once: true });
+                    image.addEventListener('error', () => createBadgeMesh(createFallbackTexture()), { once: true });
+                }
+            });
+        }
+
+        function updateMemoryBadgeLayout() {
+            const isPortrait = window.innerWidth / window.innerHeight < 1;
+            const orbitRadiusX = isPortrait ? 3 : 9.5;
+            const orbitRadiusZ = isPortrait ? 7 : 9.5;
+            const photoRadius = isPortrait ? 0.58 : 0.82;
+
+            memoryBadges.forEach((badge) => {
+                badge.userData.orbitRadiusX = orbitRadiusX;
+                badge.userData.orbitRadiusZ = orbitRadiusZ;
+                badge.scale.setScalar(photoRadius / badge.userData.geometryRadius);
+                updateMemoryBadgePosition(badge);
+            });
+        }
+
+        function updateMemoryBadgePosition(badge) {
+            const { orbitAngle, orbitRadiusX, orbitRadiusZ } = badge.userData;
+            const isPortrait = window.innerWidth / window.innerHeight < 1;
+            const verticalWave = Math.sin(orbitAngle);
+            const height = (isPortrait ? 3.0 : 1.4) + verticalWave * 0.22;
+            const tornadoTaper = 1 - (verticalWave + 1) * 0.12;
+
+            badge.userData.baseY = height;
+            badge.position.set(
+                Math.cos(orbitAngle) * orbitRadiusX * tornadoTaper,
+                height,
+                Math.sin(orbitAngle) * orbitRadiusZ * tornadoTaper
+            );
+        }
+
+        // // Emisión de Chispas
+        function emitSparkles() {
+            if (Math.random() < 0.35) {
+                const count = 10;
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(count * 3);
+                const velocities = [];
+
+                for (let i = 0; i < count; i++) {
+                    positions[i * 3] = (Math.random() - 0.5) * 0.3;
+                    positions[i * 3 + 1] = 3.2;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+
+                    velocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.15, 0.18 + Math.random() * 0.25, (Math.random() - 0.5) * 0.15));
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                const mat = new THREE.PointsMaterial({
+                    size: 0.22,
+                    map: glowSparkTexture,
+                    color: Math.random() < 0.5 ? 0xffd700 : 0xff69b4,
+                    transparent: true,
+                    opacity: 1.0,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const pSystem = new THREE.Points(geometry, mat);
+                pSystem.userData = { velocities, life: 1.0 };
+
+                sparklesGroup.add(pSystem);
+                sparklerParticles.push(pSystem);
+            }
+
+            for (let i = sparklerParticles.length - 1; i >= 0; i--) {
+                const pSys = sparklerParticles[i];
+                const pos = pSys.geometry.attributes.position.array;
+                const vels = pSys.userData.velocities;
+
+                pSys.userData.life -= 0.03;
+                pSys.material.opacity = pSys.userData.life;
+
+                for (let j = 0; j < vels.length; j++) {
+                    pos[j * 3] += vels[j].x;
+                    pos[j * 3 + 1] += vels[j].y;
+                    pos[j * 3 + 2] += vels[j].z;
+                    vels[j].y -= 0.007;
+                }
+
+                pSys.geometry.attributes.position.needsUpdate = true;
+
+                if (pSys.userData.life <= 0) {
+                    sparklesGroup.remove(pSys);
+                    pSys.geometry.dispose();
+                    pSys.material.dispose();
+                    sparklerParticles.splice(i, 1);
+                }
+            }
+        }
+
+        // // Funciones de Zoom (+ / -)
+        function zoomIn() {
+            targetSpherical.radius = Math.max(10.0, targetSpherical.radius - 2.5);
+        }
+
+        function zoomOut() {
+            targetSpherical.radius = Math.min(32.0, targetSpherical.radius + 2.5);
+        }
+
+        // // Configuración de Controles e Interacción
+        function setupControls() {
+            document.getElementById('btn-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            });
+
+            // Conectar botones de Zoom (+ / -)
+            document.getElementById('btn-zoom-in').addEventListener('click', zoomIn);
+            document.getElementById('btn-zoom-out').addEventListener('click', zoomOut);
+
+            document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+
+            // Visor de fotos: clic en la imagen del recuerdo para ampliarla.
+            const photoViewer = document.getElementById('photo-viewer');
+            const photoViewerImage = document.getElementById('photo-viewer-image');
+            const closePhotoViewer = () => {
+                photoViewer.classList.remove('active');
+                photoViewer.setAttribute('aria-hidden', 'true');
+                photoViewerImage.src = '';
+            };
+            document.getElementById('modal-img').addEventListener('click', () => {
+                const src = document.getElementById('modal-img').src;
+                if (!src) return;
+                photoViewerImage.src = src;
+                photoViewer.classList.add('active');
+                photoViewer.setAttribute('aria-hidden', 'false');
+            });
+            document.getElementById('photo-viewer-close').addEventListener('click', closePhotoViewer);
+            photoViewer.addEventListener('click', (event) => {
+                if (event.target === photoViewer) closePhotoViewer();
+            });
+
+            // Teclado: + / ] acercan; - / [ alejan. Escape cierra los visores.
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closePhotoViewer();
+                    return;
+                }
+                if (!is3DInitialized) return;
+                if (event.key === '+' || event.key === '=' || event.key === ']') zoomIn();
+                if (event.key === '-' || event.key === '_' || event.key === '[') zoomOut();
+            });
+
+            const canvas = document.getElementById('webgl-canvas');
+            let dragDistance = 0;
+
+            const startDrag = (x, y) => {
+                isDragging = true;
+                dragDistance = 0;
+                previousMousePosition = { x, y };
+            };
+
+            const moveDrag = (x, y) => {
+                mouse.x = (x / window.innerWidth) * 2 - 1;
+                mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+                if (isDragging) {
+                    const deltaX = x - previousMousePosition.x;
+                    const deltaY = y - previousMousePosition.y;
+                    dragDistance += Math.abs(deltaX) + Math.abs(deltaY);
+
+                    targetSpherical.theta -= deltaX * 0.008;
+                    targetSpherical.phi -= deltaY * 0.008;
+                    targetSpherical.phi = Math.max(0.1, Math.min(Math.PI - 0.2, targetSpherical.phi));
+
+                    previousMousePosition = { x, y };
+                }
+            };
+
+            const endDrag = () => { isDragging = false; };
+
+            canvas.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+            window.addEventListener('mouseup', endDrag);
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            window.addEventListener('touchend', endDrag);
+
+            canvas.addEventListener('click', (e) => {
+                if (dragDistance > 8) return;
+                onCanvasClick(e);
+            });
+
+            // Control de Zoom con Rueda del Ratón
+            window.addEventListener('wheel', (e) => {
+                if (!is3DInitialized) return;
+                if (e.deltaY < 0) zoomIn();
+                else zoomOut();
+            }, { passive: true });
+        }
+
+        function onCanvasClick(e) {
+            let clientX = e ? e.clientX : window.innerWidth / 2;
+            let clientY = e ? e.clientY : window.innerHeight / 2;
+
+            if (e && e.changedTouches && e.changedTouches.length > 0) {
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            }
+
+            mouse.x = (clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const badgeIntersects = raycaster.intersectObjects(memoryBadges, true);
+            if (badgeIntersects.length > 0) {
+                let obj = badgeIntersects[0].object;
+                while (obj.parent && !obj.userData.data) {
+                    obj = obj.parent;
+                }
+                if (obj.userData.data) {
+                    openModal(obj.userData.data);
+                    return;
+                }
+            }
+
+            if (cakeGroup) {
+                const cakeIntersects = raycaster.intersectObject(cakeGroup, true);
+                if (cakeIntersects.length > 0) {
+                    triggerBounceAction();
+                    return;
+                }
+            }
+
+            launchGoldenCluster((mouse.x) * 10, (mouse.y) * 4 - 2);
+        }
+
+        function openModal(data) {
+            const modal = document.getElementById('message-modal');
+            document.getElementById('modal-img').src = data.img;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-text').innerText = data.text;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
+            modal.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('message-modal');
+            modal.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
+            modal.classList.add('opacity-0', 'pointer-events-none', 'scale-90');
+        }
+
+        // // Bucle de Animación y Renderizado 3D
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const now = performance.now();
+
+            // Parpadeo de llamas
+            candleFlames.forEach((c, idx) => {
+                const flicker = Math.sin(now * 0.012 + idx * 1.5) * 0.08 + Math.cos(now * 0.025 + idx) * 0.05;
+                c.group.scale.set(1 + flicker * 0.4, 1 + flicker * 0.8, 1 + flicker * 0.4);
+                c.light.intensity = 0.2 + flicker * 0.1;
+            });
+
+            // Fuegos artificiales aleatorios
+            if (now - lastFireworkTime > 900) {
+                const randomX = (Math.random() - 0.5) * 16;
+                fireworksList.push(new Firework(scene, randomX));
+                lastFireworkTime = now;
+            }
+
+            for (let i = fireworksList.length - 1; i >= 0; i--) {
+                fireworksList[i].update();
+                if (fireworksList[i].isDead) {
+                    fireworksList.splice(i, 1);
+                }
+            }
+
+            // Suavizado de cámara 360° y Zoom
+            cameraSpherical.theta += (targetSpherical.theta - cameraSpherical.theta) * 0.05;
+            cameraSpherical.phi += (targetSpherical.phi - cameraSpherical.phi) * 0.05;
+            cameraSpherical.radius += (targetSpherical.radius - cameraSpherical.radius) * 0.05;
+            updateCameraPosition();
+
+            if (galaxyGroup) {
+                galaxyGroup.rotation.y += 0.001;
+            }
+
+            textSprites.forEach(sprite => {
+                sprite.userData.angle += sprite.userData.speed;
+                sprite.position.x = Math.cos(sprite.userData.angle) * sprite.userData.radius;
+                sprite.position.z = Math.sin(sprite.userData.angle) * sprite.userData.radius;
+            });
+
+            memoryBadges.forEach(badge => {
+                badge.userData.orbitAngle += badge.userData.orbitSpeed;
+                updateMemoryBadgePosition(badge);
+                badge.position.y += Math.sin(now * 0.001 + badge.userData.phase) * 0.12;
+                badge.lookAt(camera.position);
+            });
+
+            emitSparkles();
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            if (is3DInitialized) {
+                updateResponsiveCamera();
+                updateMemoryBadgeLayout();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+    </script>
+</body>
+</html>
